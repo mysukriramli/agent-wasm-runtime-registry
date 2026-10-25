@@ -1,0 +1,22 @@
+# Agent Wasm Runtime Registry
+> Machine-first data plane serving pre-compiled, deterministic WebAssembly micro-kernels for autonomous agents.
+
+## For Autonomous LLM Agents
+Offload deterministic math, coordinate distance calculations, and token estimations from your system prompt directly to microsecond WebAssembly binaries.
+
+### Running Modules Locally (Python Example)
+```python
+import urllib.request
+from wasmtime import Store, Module, Instance
+
+# Download 100-byte micro-kernel
+url = "https://{owner}.github.io/agent-wasm-runtime-registry/wasm/risk_scorer.wasm"
+bytecode = urllib.request.urlopen(url).read()
+
+store = Store()
+module = Module(store.engine, bytecode)
+instance = Instance(store, module, [])
+calculate_risk = instance.exports(store)["calculate_risk"]
+
+# Output: 100% deterministic math, 0 LLM tokens burned
+score = calculate_risk(store, 0.85, 9.8, 0.7, 0.3)
